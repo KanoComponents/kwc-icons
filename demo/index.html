@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>kwc-icons demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../../kwc-style/kwc-style.html">
+    <link rel="import" href="../kwc-icons.html">
+
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+          h2 {
+              color: var(--color-black);
+              text-transform: uppercase;
+          }
+          iron-icon {
+              transition: all 0.2s;
+              -webkit-transition: all 0.2s;
+              height: 64px;
+              width: 64px;
+          }
+          iron-icon:hover {
+              fill: var(--color-kano-orange);
+          }
+          .set {
+              color: var(--color-chateau);
+              display: block;
+              text-align: center;
+              margin: auto;
+              padding: 1em 0;
+              border-bottom: 1px solid var(--color-grey);
+          }
+          .set:last-of-type {
+              border-bottom: none;
+          }
+          .container {
+              display: inline-block;
+              margin: 16px;
+              text-align: center;
+              vertical-align: top;
+          }
+          .container > div {
+              color: var(--color-chateau);
+              font-size: 16px;
+              margin-top: 8px;
+          }
+      </style>
+    </custom-style>
+  </head>
+  <body>
+      <template is="dom-bind" id="scope">
+          <template is="dom-repeat" id="iconsetRepeat" filter="isKwcIconset">
+              <div class="set">
+                  <h2>{{item.name}}</h2>
+                  <template is="dom-repeat" items="{{getIconNames(item)}}">
+                      <span class="container">
+                          <iron-icon icon="{{item}}"></iron-icon>
+                          <div>{{item}}</div>
+                      </span>
+                  </template>
+              </div>
+          </template>
+      </template>
+    </dom-bind>
+
+    <script>
+        window.addEventListener('WebComponentsReady', function() {
+            scope.getIconNames = function (iconset) {
+                return iconset.getIconNames();
+            };
+            scope.isKwcIconset = function (iconset) {
+                return /kwc-(.*)/.test(iconset.name);
+            }
+            iconsetRepeat.items = new Polymer.IronMeta({
+                type: 'iconset'
+            }).list;
+        });
+    </script>
+  </body>
+</html>

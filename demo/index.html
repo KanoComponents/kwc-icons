@@ -6,14 +6,25 @@
 
     <title>kwc-icons demo</title>
 
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
 
-    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-    <link rel="import" href="../../kwc-style/kwc-style.html">
-    <link rel="import" href="../kwc-icons.html">
+    <script type="module" src="../../../@polymer/iron-demo-helpers/demo-pages-shared-styles.js"></script>
+    <script type="module" src="../../../@polymer/iron-demo-helpers/demo-snippet.js"></script>
+    <script type="module" src="../../../@kano/kwc-style/kwc-style.js"></script>
+    <script type="module" src="../kwc-icons.js"></script>
 
-    <custom-style>
+    <!-- FIXME(polymer-modulizer):
+        These imperative modules that innerHTML your HTML are
+        a hacky way to be sure that any mixins in included style
+        modules are ready before any elements that reference them are
+        instantiated, otherwise the CSS @apply mixin polyfill won't be
+        able to expand the underlying CSS custom properties.
+        See: https://github.com/Polymer/polymer-modulizer/issues/154
+        -->
+    <script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<custom-style>
       <style is="custom-style" include="demo-pages-shared-styles">
           h2 {
               color: var(--color-black);
@@ -51,10 +62,16 @@
               margin-top: 8px;
           }
       </style>
-    </custom-style>
+    </custom-style>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
   </head>
   <body>
-      <template is="dom-bind" id="scope">
+      <script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<template is="dom-bind" id="scope">
           <template is="dom-repeat" id="iconsetRepeat" filter="isKwcIconset">
               <div class="set">
                   <h2>{{item.name}}</h2>
@@ -66,21 +83,27 @@
                   </template>
               </div>
           </template>
-      </template>
+      </template>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
     </dom-bind>
 
-    <script>
-        window.addEventListener('WebComponentsReady', function() {
-            scope.getIconNames = function (iconset) {
-                return iconset.getIconNames();
-            };
-            scope.isKwcIconset = function (iconset) {
-                return /kwc-(.*)/.test(iconset.name);
-            }
-            iconsetRepeat.items = new Polymer.IronMeta({
-                type: 'iconset'
-            }).list;
-        });
-    </script>
+    <script type="module">
+import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+import '@polymer/iron-demo-helpers/demo-snippet.js';
+import '@kano/kwc-style/kwc-style.js';
+import '../kwc-icons.js';
+import { IronMeta } from '@polymer/iron-meta/iron-meta.js';
+scope.getIconNames = function (iconset) {
+    return iconset.getIconNames();
+};
+scope.isKwcIconset = function (iconset) {
+    return /kwc-(.*)/.test(iconset.name);
+}
+iconsetRepeat.items = new IronMeta({
+    type: 'iconset'
+}).list;
+</script>
   </body>
 </html>
